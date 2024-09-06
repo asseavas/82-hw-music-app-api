@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../models/User';
 import mongoose from 'mongoose';
 import TrackHistory from '../models/TrackHistory';
+import Track from '../models/Track';
 
 const trackHistoryRouter = express.Router();
 
@@ -27,8 +28,20 @@ trackHistoryRouter.post('/', async (req, res, next) => {
       return res.status(401).send({ error: 'Wrong Token!' });
     }
 
+    const trackId = req.body.track;
+
+    if (!mongoose.Types.ObjectId.isValid(trackId)) {
+      return res.status(400).send({ error: 'Invalid track ID format!' });
+    }
+
+    const existingTrack = await Track.findById(trackId);
+
+    if (!existingTrack) {
+      return res.status(400).send({ error: 'Track not found!' });
+    }
+
     const trackHistory = new TrackHistory({
-      track: req.body.track,
+      track: existingTrack._id,
       user: user._id,
       datetime: new Date(),
     });
