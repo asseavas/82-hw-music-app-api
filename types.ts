@@ -16,3 +16,9 @@ export interface TrackMutation {
   title: string;
   duration: string;
 }
+
+export interface UserFields {
+  username: string;
+  password: string;
+  token: string;
+}
