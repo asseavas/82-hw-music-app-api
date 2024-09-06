@@ -22,3 +22,9 @@ export interface UserFields {
   password: string;
   token: string;
 }
+
+export interface TrackHistoryFields {
+  user: string;
+  track: string;
+  datetime: Date;
+}
