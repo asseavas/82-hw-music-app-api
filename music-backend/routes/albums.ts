@@ -3,6 +3,7 @@ import { AlbumMutation } from '../types';
 import { imagesUpload } from '../multer';
 import Album from '../models/Album';
 import mongoose from 'mongoose';
+import Track from '../models/Track';
 
 const albumsRouter = express.Router();
 
@@ -19,13 +20,26 @@ albumsRouter.get('/', async (req, res, next) => {
 
 albumsRouter.get('/:id', async (req, res, next) => {
   try {
-    const album = await Album.findById(req.params.id).populate('artist');
+    const album = await Album.findById(req.params.id).populate('artist', 'name');
 
     if (album === null) {
       return res.status(404).send({ error: 'Album not found' });
     }
 
-    return res.send(album);
+    const tracks = await Track.find({ album: req.params.id }).sort({ number: 1 });
+
+    const albumInfo = {
+      artist: album.artist,
+      albumName: album.title,
+      releaseYear: album.releaseYear,
+      tracks: tracks.map((track) => ({
+        number: track.number,
+        title: track.title,
+        duration: track.duration
+      }))
+    };
+
+    return res.send(albumInfo);
   } catch (error) {
     next(error);
   }
