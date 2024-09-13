@@ -15,7 +15,7 @@ const run = async () => {
     console.log('Skipping drop...');
   }
 
-  const [lilPeep, lanaDelRey, joji, chetta, suicideBoys, playboiCarti] =
+  const [lilPeep, lanaDelRey, joji, chetta, suicideBoys, playboiCarti, pouya] =
     await Artist.create(
       {
         name: 'Lil Peep',
@@ -52,6 +52,11 @@ const run = async () => {
         information:
           'Playboi Carti is an American rapper known for his minimalist style and catchy, repetitive hooks, which have made him a prominent figure in the trap scene.',
       },
+      {
+        name: 'Pouya',
+        image: 'fixtures/pouya.jpg',
+        information: 'Pouya is an American rapper from Miami, known for his underground style, raw lyricism, and collaborations with other artists in the underground rap scene.',
+      }
     );
 
   const [
@@ -64,6 +69,9 @@ const run = async () => {
     longTermEffectsOfSuffering,
     dieLit,
     magnolia,
+    undergroundUnderdog,
+    fiveFive,
+    theSouthGotSomethingtoSay,
   ] = await Album.create(
     {
       artist: lilPeep,
@@ -118,6 +126,24 @@ const run = async () => {
       title: 'Magnolia',
       releaseYear: 2017,
       image: 'fixtures/magnolia.jpg',
+    },
+    {
+      artist: pouya,
+      title: 'Underground Underdog',
+      releaseYear: 2016,
+      image: 'fixtures/undergroundunderdogs.jpeg',
+    },
+    {
+      artist: pouya,
+      title: 'Five Five',
+      releaseYear: 2018,
+      image: 'fixtures/fivefive.jpeg',
+    },
+    {
+      artist: pouya,
+      title: 'The South Got Something to Say',
+      releaseYear: 2019,
+      image: 'fixtures/thesouthgotsomethingtosay.jpeg',
     },
   );
 
@@ -254,6 +280,79 @@ const run = async () => {
       duration: '3:10',
       number: 3,
     },
+    {
+      album: undergroundUnderdog,
+      title: 'Hunnit Hunnit',
+      duration: '3:18',
+      number: 1,
+    },
+    {
+      album: undergroundUnderdog,
+      title: 'But Wait, There’s More',
+      duration: '3:07',
+      number: 2,
+    },
+    {
+      album: undergroundUnderdog,
+      title: 'Suicidal Thoughts in the Back of the Cadillac',
+      duration: '2:59',
+      number: 3,
+    },
+    {
+      album: undergroundUnderdog,
+      title: 'Get Buck',
+      duration: '2:48',
+      number: 4,
+    },
+    {
+      album: fiveFive,
+      title: 'Daddy Issues',
+      duration: '2:59',
+      number: 1,
+    },
+    {
+      album: fiveFive,
+      title: 'Void',
+      duration: '2:46',
+      number: 2,
+    },
+    {
+      album: fiveFive,
+      title: 'Don’t Bang My Line',
+      duration: '2:34',
+      number: 3,
+    },
+    {
+      album: fiveFive,
+      title: 'Handshakes',
+      duration: '2:20',
+      number: 4,
+    },
+    {
+      album: theSouthGotSomethingtoSay,
+      title: 'Cyanide',
+      duration: '2:55',
+      number: 1,
+    },
+    {
+      album: theSouthGotSomethingtoSay,
+      title: 'life? … lol',
+      duration: '3:10',
+      number: 2,
+    },
+    {
+      album: theSouthGotSomethingtoSay,
+      title: 'Florida Thang',
+      duration: '2:30',
+      number: 3,
+    },
+    {
+      album: theSouthGotSomethingtoSay,
+      title: 'I’m Alive',
+      duration: '2:38',
+      number: 4,
+    },
+
   );
 
   await db.close();
