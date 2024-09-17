@@ -4,6 +4,9 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
   },
+  typography: {
+    fontFamily: '"Inter", sans-serif',
+  },
   components: {
     MuiTextField: {
       defaultProps: {
@@ -13,5 +16,7 @@ const theme = createTheme({
     },
   },
 });
+
+theme.palette.background.default = '#000';
 
 export default theme;

@@ -11,7 +11,7 @@ albumsRouter.get('/', async (req, res, next) => {
   try {
     const artistId = req.query.artist;
     const query = artistId ? { artist: artistId } : {};
-    const albums = await Album.find(query).sort({ duration: -1 });
+    const albums = await Album.find(query).sort({ releaseYear: -1 });
     return res.send(albums);
   } catch (error) {
     next(error);
@@ -20,23 +20,27 @@ albumsRouter.get('/', async (req, res, next) => {
 
 albumsRouter.get('/:id', async (req, res, next) => {
   try {
-    const album = await Album.findById(req.params.id).populate('artist', 'name');
+    const album = await Album.findById(req.params.id).populate('artist');
 
     if (album === null) {
       return res.status(404).send({ error: 'Album not found' });
     }
 
-    const tracks = await Track.find({ album: req.params.id }).sort({ number: 1 });
+    const tracks = await Track.find({ album: req.params.id }).sort('number');
+    const tracksNumber = tracks.length;
 
     const albumInfo = {
       artist: album.artist,
       albumName: album.title,
       releaseYear: album.releaseYear,
-      tracks: tracks.map((track) => ({
+      tracks: tracks.map(track => ({
+        _id: track._id,
         number: track.number,
         title: track.title,
-        duration: track.duration
-      }))
+        duration: track.duration,
+      })),
+      tracksNumber: tracksNumber,
+      image: album.image || null,
     };
 
     return res.send(albumInfo);

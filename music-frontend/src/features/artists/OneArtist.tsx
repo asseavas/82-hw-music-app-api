@@ -3,11 +3,18 @@ import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectOneArtist, selectOneArtistFetching } from './artistsSlice';
 import { fetchOneArtist } from './artistsThunks';
-import { Button, CircularProgress, Grid2, Typography } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Grid2,
+  styled,
+  Typography,
+} from '@mui/material';
 import { fetchAlbums } from '../albums/albumsThunks';
 import { selectAlbums } from '../albums/albumsSlice';
 import AlbumCard from '../albums/components/AlbumCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { API_URL, ContentContainer } from '../../constants';
 
 const OneArtist = () => {
   const { id } = useParams() as { id: string };
@@ -15,6 +22,20 @@ const OneArtist = () => {
   const artist = useAppSelector(selectOneArtist);
   const albums = useAppSelector(selectAlbums);
   const isFetching = useAppSelector(selectOneArtistFetching);
+  const artistImage = `${API_URL}/${artist?.image}`;
+
+  const ImageBox = styled(Grid2)({
+    padding: '30px',
+    display: 'flex',
+    borderTopLeftRadius: '10px',
+    borderTopRightRadius: '10px',
+    flexDirection: 'column',
+    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url(${artistImage})`,
+    height: '300px',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  });
 
   useEffect(() => {
     dispatch(fetchOneArtist(id));
@@ -30,7 +51,7 @@ const OneArtist = () => {
           to="/"
           sx={{ color: 'lightGrey' }}
         >
-          Back to main
+          To main
         </Button>
       </Grid2>
       {isFetching && (
@@ -39,23 +60,44 @@ const OneArtist = () => {
         </Grid2>
       )}
       {artist && (
-        <>
-          <Grid2 container sx={{ background: artist.image, height: '250px' }}>
-            <Grid2 component={Typography} variant="h4">
+        <ContentContainer>
+          <ImageBox>
+            <Grid2
+              component={Typography}
+              variant="h1"
+              sx={{ fontWeight: 900, mb: 1, mt: 'auto' }}
+            >
               {artist.name}
             </Grid2>
-            <Grid2 component={Typography} variant="h6">
+            <Grid2
+              component={Typography}
+              color="text.secondary"
+              sx={{ maxWidth: '70%', fontSize: '16px' }}
+            >
               {artist.information || 'No information available'}
             </Grid2>
+          </ImageBox>
+          <Grid2 container mt={4} ml={2} direction="column" spacing={2}>
+            <Grid2
+              component={Typography}
+              variant="h5"
+              sx={{ fontWeight: 'medium', ml: 2, mt: 2 }}
+            >
+              Albums
+            </Grid2>
+            <Grid2>
+              {albums && albums.length > 0 ? (
+                albums.map((album) => (
+                  <AlbumCard album={album} key={album._id} />
+                ))
+              ) : (
+                <Typography variant="body2" color="text.secondary" ml={2}>
+                  No albums available
+                </Typography>
+              )}
+            </Grid2>
           </Grid2>
-          <Grid2 container spacing={2} mt={3}>
-            {albums && albums.length > 0 ? (
-              albums.map((album) => <AlbumCard album={album} key={album._id} />)
-            ) : (
-              <Typography variant="body1">No albums available</Typography>
-            )}
-          </Grid2>
-        </>
+        </ContentContainer>
       )}
     </Grid2>
   );

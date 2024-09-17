@@ -1,26 +1,12 @@
 import React from 'react';
-import imageNotFound from '../../../assets/images/image-not-found.webp';
-import { API_URL } from '../../../constants';
+import imageNotFound from '../../../assets/images//no-image.jpg';
+import { API_URL, CardItem } from '../../../constants';
 import { CardMedia, Grid2, styled, Typography } from '@mui/material';
 import { Album } from '../../../types';
-import { Link } from 'react-router-dom';
-
-const AlbumCardItem = styled(Link)({
-  textDecoration: 'none',
-  color: 'white',
-  padding: '12px',
-  display: 'inline-block',
-  borderRadius: '10px',
-  transition: 'background-color 0.3s ease',
-  '&:hover': {
-    backgroundColor: '#333',
-  },
-});
 
 const AlbumCardMedia = styled(CardMedia)({
   height: '200px',
   width: '200px',
-  paddingTop: '56.25%',
   borderRadius: '10px',
 });
 
@@ -34,20 +20,21 @@ const AlbumCard: React.FC<Props> = ({ album }) => {
   if (album.image) {
     albumImage = `${API_URL}/${album.image}`;
   }
+
   return (
-    <AlbumCardItem to={`/albums/${album._id}`}>
+    <CardItem to={`/albums/${album._id}`} sx={{ width: '224px' }}>
       <Grid2 container direction="column" spacing={1}>
         <Grid2>
           <AlbumCardMedia image={albumImage} />
         </Grid2>
-        <Grid2 mt={3}>
-          <Typography sx={{ mb: '4px' }}>{album.title}</Typography>
-          <Typography color="text.secondary">
-            {album.releaseYear} · Album
+        <Grid2 mt={1}>
+          <Typography sx={{ mb: '3px' }}>{album.title}</Typography>
+          <Typography color="text.secondary" variant="body2">
+            {album.releaseYear} • Album
           </Typography>
         </Grid2>
       </Grid2>
-    </AlbumCardItem>
+    </CardItem>
   );
 };
 

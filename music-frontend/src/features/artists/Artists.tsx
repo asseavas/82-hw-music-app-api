@@ -2,22 +2,21 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectArtists, selectArtistsFetching } from './artistsSlice';
 import React, { useEffect } from 'react';
 import { fetchArtists } from './artistsThunks';
-import { Alert, CircularProgress, Grid2, Typography } from '@mui/material';
+import { CircularProgress, Grid2, Typography } from '@mui/material';
 import ArtistCard from './components/ArtistCard';
+import { ContentContainer } from '../../constants';
 
 const Artists = () => {
   const dispatch = useAppDispatch();
   const artists = useAppSelector(selectArtists);
   const isFetching = useAppSelector(selectArtistsFetching);
 
-  useEffect(() => {
-    dispatch(fetchArtists());
-  }, [dispatch]);
-
   let content: React.ReactNode = (
-    <Alert severity="info" sx={{ width: '100%' }}>
-      There are no artists here!
-    </Alert>
+    <Grid2 container mt={5} mb={5}>
+      <Grid2 component={Typography} variant="body1" color="text.secondary">
+        There are no artists here!
+      </Grid2>
+    </Grid2>
   );
 
   if (isFetching) {
@@ -28,15 +27,23 @@ const Artists = () => {
     ));
   }
 
+  useEffect(() => {
+    dispatch(fetchArtists());
+  }, [dispatch]);
+
   return (
-    <Grid2 container spacing={3} direction="column" mt={3}>
+    <ContentContainer
+      container
+      spacing={3}
+      sx={{ paddingInline: '25px', mt: 4, pt: 4 }}
+    >
       <Grid2>
         <Typography variant="h4">Artists</Typography>
       </Grid2>
       <Grid2 container justifyContent="space-between">
         {content}
       </Grid2>
-    </Grid2>
+    </ContentContainer>
   );
 };
 

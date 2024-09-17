@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Artist, ArtistInfo } from '../../types';
+import { Artist } from '../../types';
 import axiosApi from '../../axiosApi';
 
 export const fetchArtists = createAsyncThunk<Artist[]>(
@@ -10,10 +10,10 @@ export const fetchArtists = createAsyncThunk<Artist[]>(
   },
 );
 
-export const fetchOneArtist = createAsyncThunk<ArtistInfo, string>(
+export const fetchOneArtist = createAsyncThunk<Artist, string>(
   'artists/fetchOne',
   async (id) => {
-    const { data: artist } = await axiosApi.get<ArtistInfo>(`/artists/${id}`);
+    const { data: artist } = await axiosApi.get<Artist>(`/artists/${id}`);
     return artist;
   },
 );

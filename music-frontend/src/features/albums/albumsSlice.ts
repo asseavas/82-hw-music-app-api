@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Album } from '../../types';
+import { Album, AlbumInfo } from '../../types';
 import { fetchAlbums, fetchOneAlbum } from './albumsThunks';
 
 export interface AlbumsState {
   items: Album[];
-  album: Album | null;
+  album: AlbumInfo | null;
   itemsFetching: boolean;
+  tracksFetching: boolean;
   oneFetching: boolean;
 }
 
@@ -13,6 +14,7 @@ const initialState: AlbumsState = {
   items: [],
   album: null,
   itemsFetching: false,
+  tracksFetching: false,
   oneFetching: false,
 };
 
@@ -51,6 +53,7 @@ export const albumsSlice = createSlice({
     selectAlbumsFetching: (state) => state.itemsFetching,
     selectOneAlbum: (state) => state.album,
     selectOneAlbumFetching: (state) => state.oneFetching,
+    selectTracksFetching: (state) => state.tracksFetching,
   },
 });
 
@@ -61,4 +64,5 @@ export const {
   selectAlbumsFetching,
   selectOneAlbum,
   selectOneAlbumFetching,
+  selectTracksFetching,
 } = albumsSlice.selectors;

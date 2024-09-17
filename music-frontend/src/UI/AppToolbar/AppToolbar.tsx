@@ -1,4 +1,11 @@
-import { AppBar, Grid, styled, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Container,
+  Grid2,
+  styled,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const StyledLink = styled(Link)({
@@ -11,13 +18,18 @@ const StyledLink = styled(Link)({
 
 const AppToolbar = () => {
   return (
-    <AppBar position="sticky" sx={{ mb: 2 }}>
+    <AppBar
+      position="sticky"
+      sx={{ mb: 2, background: 'none', paddingTop: '15px' }}
+    >
       <Toolbar>
-        <Grid container justifyContent="space-between" align-items="center">
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <StyledLink to="/">PlayCloud</StyledLink>
+        <Grid2 container justifyContent="space-between" align-items="center">
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+            <Container maxWidth="xl">
+              <StyledLink to="/">PlayCloud</StyledLink>
+            </Container>
           </Typography>
-        </Grid>
+        </Grid2>
       </Toolbar>
     </AppBar>
   );
