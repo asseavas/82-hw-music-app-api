@@ -3,6 +3,7 @@ import User from '../models/User';
 import mongoose from 'mongoose';
 import TrackHistory from '../models/TrackHistory';
 import Track from '../models/Track';
+import auth from '../middleware/auth';
 
 const trackHistoryRouter = express.Router();
 
@@ -53,6 +54,26 @@ trackHistoryRouter.post('/', async (req, res, next) => {
       return res.status(400).send(error);
     }
 
+    return next(error);
+  }
+});
+
+trackHistoryRouter.get('/', auth, async (req, res, next) => {
+  try {
+    const user = req.user;
+
+    const trackHistory = await TrackHistory.find({ user: user._id })
+      .populate('track')
+      .sort({ datetime: -1 });
+
+    const formattedHistory = trackHistory.map((entry) => ({
+      artist: entry.track.artist,
+      title: entry.track.title,
+      datetime: entry.datetime,
+    }));
+
+    return res.send(formattedHistory);
+  } catch (error) {
     return next(error);
   }
 });

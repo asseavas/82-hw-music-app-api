@@ -32,6 +32,16 @@ export interface AlbumInfo {
   image: string | null;
 }
 
+export interface ApiTrackHistory {
+  track: string;
+}
+
+export interface HistoryTrack {
+  title: string;
+  artist: string;
+  datetime: string;
+}
+
 export interface RegisterMutation {
   username: string;
   password: string;

@@ -21,6 +21,8 @@ import {
   OneAlbumCardMedia,
 } from '../../constants';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
+import { selectUser } from '../users/usersSlice';
+import { addToHistory } from '../tracks/tracksThunks';
 
 const bull = (
   <Box
@@ -36,6 +38,7 @@ const OneAlbum = () => {
   const dispatch = useAppDispatch();
   const album = useAppSelector(selectOneAlbum);
   const isFetching = useAppSelector(selectOneAlbumFetching);
+  const user = useAppSelector(selectUser);
 
   let albumImage = imageNotFound;
 
@@ -44,6 +47,10 @@ const OneAlbum = () => {
   }
 
   const artistAvatarImage = `${API_URL}/${album?.artist.image}`;
+
+  const addTrackToHistory = (trackId: string) => {
+    dispatch(addToHistory({ track: trackId }));
+  };
 
   useEffect(() => {
     dispatch(fetchOneAlbum(id));
@@ -131,7 +138,12 @@ const OneAlbum = () => {
             </AlbumTracksInfoContainer>
             <Grid2>
               {album.tracks.map((track) => (
-                <AlbumTrackItem key={track._id} track={track} />
+                <AlbumTrackItem
+                  key={track._id}
+                  track={track}
+                  user={user}
+                  onClick={() => addTrackToHistory(track._id)}
+                />
               ))}
             </Grid2>
           </Grid2>

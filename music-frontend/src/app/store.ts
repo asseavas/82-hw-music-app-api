@@ -12,6 +12,7 @@ import {
   REHYDRATE,
   persistStore,
 } from 'redux-persist';
+import { historyTracksReducer } from '../features/tracks/tracksSlice';
 
 const userPersistConfig = {
   key: 'music:users',
@@ -22,6 +23,7 @@ const userPersistConfig = {
 const rootReducer = combineReducers({
   artists: artistsReducer,
   albums: albumsReducer,
+  historyTracks: historyTracksReducer,
   users: persistReducer(userPersistConfig, usersReducer),
 });
 
