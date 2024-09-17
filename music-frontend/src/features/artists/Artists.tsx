@@ -34,6 +34,7 @@ const Artists = () => {
   return (
     <ContentContainer
       container
+      direction="column"
       spacing={3}
       sx={{ paddingInline: '25px', mt: 4, pt: 4 }}
     >

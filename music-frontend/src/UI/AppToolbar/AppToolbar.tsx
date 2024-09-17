@@ -7,6 +7,10 @@ import {
   Typography,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useAppSelector } from '../../app/hooks';
+import { selectUser } from '../../features/users/usersSlice';
+import AnonymousMenu from './AnonymousMenu';
+import UserMenu from './UserMenu';
 
 const StyledLink = styled(Link)({
   color: 'inherit',
@@ -17,6 +21,7 @@ const StyledLink = styled(Link)({
 });
 
 const AppToolbar = () => {
+  const user = useAppSelector(selectUser);
   return (
     <AppBar
       position="sticky"
@@ -24,11 +29,14 @@ const AppToolbar = () => {
     >
       <Toolbar>
         <Grid2 container justifyContent="space-between" align-items="center">
-          <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-            <Container maxWidth="xl">
-              <StyledLink to="/">PlayCloud</StyledLink>
-            </Container>
-          </Typography>
+          <Grid2>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+              <Container maxWidth="xl">
+                <StyledLink to="/">PlayCloud</StyledLink>
+              </Container>
+            </Typography>
+          </Grid2>
+          {user ? <UserMenu user={user}></UserMenu> : <AnonymousMenu />}
         </Grid2>
       </Toolbar>
     </AppBar>

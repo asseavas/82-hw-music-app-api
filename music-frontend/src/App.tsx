@@ -5,6 +5,7 @@ import Artists from './features/artists/Artists';
 import OneArtist from './features/artists/OneArtist';
 import OneAlbum from './features/albums/OneAlbum';
 import Register from './features/users/Register';
+import Login from './features/users/Login';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/artists/:id" element={<OneArtist />} />
           <Route path="/albums/:id" element={<OneAlbum />} />
           <Route path="/register" element={<Register />}></Route>
+          <Route path="/login" element={<Login />}></Route>
           <Route
             path="*"
             element={<Typography variant="h1">Not found</Typography>}
