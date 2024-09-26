@@ -1,9 +1,11 @@
 import express from 'express';
-import { AlbumMutation } from '../types';
 import { imagesUpload } from '../multer';
 import Album from '../models/Album';
 import mongoose from 'mongoose';
 import Track from '../models/Track';
+import auth, { RequestWithUser } from '../middleware/auth';
+import permit from '../middleware/permit';
+import Artist from '../models/Artist';
 
 const albumsRouter = express.Router();
 
@@ -38,6 +40,7 @@ albumsRouter.get('/:id', async (req, res, next) => {
         number: track.number,
         title: track.title,
         duration: track.duration,
+        isPublished: track.isPublished,
       })),
       tracksNumber: tracksNumber,
       image: album.image || null,
@@ -49,17 +52,15 @@ albumsRouter.get('/:id', async (req, res, next) => {
   }
 });
 
-albumsRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
+albumsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWithUser, res, next) => {
   try {
-    const AlbumMutation: AlbumMutation = {
+    const album = await Album.create({
       artist: req.body.artist,
+      user: req.user?._id,
       title: req.body.title,
-      releaseYear: req.body.releaseYear,
+      releaseYear: parseFloat(req.body.releaseYear),
       image: req.file ? req.file.filename : null,
-    };
-
-    const album = new Album(AlbumMutation);
-    await album.save();
+    });
 
     return res.send(album);
   } catch (error) {
@@ -68,6 +69,56 @@ albumsRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
     }
 
     return next(error);
+  }
+});
+
+albumsRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).send({ error: 'Invalid album ID' });
+    }
+
+    if (!req.user) {
+      return res.status(401).send({ error: 'User not found' });
+    }
+
+    const album = await Album.findById(id);
+
+    if (!album) {
+      return res.status(404).send({ error: 'Album not found' });
+    }
+
+    await Artist.findByIdAndDelete(id);
+
+    return res.send({ message: 'Album deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+albumsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.user) {
+      return res.status(401).send({ error: 'User not found' });
+    }
+
+    const album = await Album.findById(id);
+
+    if (!album) {
+      return res.status(404).send({ error: 'Album not found' });
+    }
+
+    album.isPublished = !album.isPublished;
+
+    await album.save();
+
+    return res.send({ message: `Album's isPublished status updated to ${album.isPublished}` });
+  } catch (error) {
+    next(error);
   }
 });
 
