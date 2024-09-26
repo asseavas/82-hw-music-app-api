@@ -12,7 +12,7 @@ import {
   REHYDRATE,
   persistStore,
 } from 'redux-persist';
-import { historyTracksReducer } from '../features/tracks/tracksSlice';
+import { historyTracksReducer } from '../features/tracks/tracksHistorySlice';
 
 const userPersistConfig = {
   key: 'music:users',

@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { fetchAlbums } from '../albums/albumsThunks';
-import { selectAlbums } from '../albums/albumsSlice';
+import { selectAlbums, selectAlbumsFetching } from '../albums/albumsSlice';
 import AlbumCard from '../albums/components/AlbumCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { API_URL, ContentContainer } from '../../constants';
@@ -21,6 +21,7 @@ const OneArtist = () => {
   const dispatch = useAppDispatch();
   const artist = useAppSelector(selectOneArtist);
   const albums = useAppSelector(selectAlbums);
+  const albumsFetching = useAppSelector(selectAlbumsFetching);
   const isFetching = useAppSelector(selectOneArtistFetching);
   const artistImage = `${API_URL}/${artist?.image}`;
 
@@ -86,12 +87,23 @@ const OneArtist = () => {
               Albums
             </Grid2>
             <Grid2>
+              {albumsFetching && (
+                <Grid2>
+                  <CircularProgress />
+                </Grid2>
+              )}
               {albums && albums.length > 0 ? (
                 albums.map((album) => (
                   <AlbumCard album={album} key={album._id} />
                 ))
               ) : (
-                <Typography variant="body2" color="text.secondary" ml={2}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  ml={2}
+                  mt={3}
+                  mb={3}
+                >
                   No albums available
                 </Typography>
               )}

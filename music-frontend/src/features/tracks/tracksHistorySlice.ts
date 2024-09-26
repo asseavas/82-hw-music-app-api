@@ -1,35 +1,36 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ApiTrackHistory, HistoryTrack } from '../../types';
-import { fetchTrackHistory, addToHistory } from './tracksThunks';
+import { HistoryTrack } from '../../types';
+import { addToHistory, fetchTrackHistory } from './tracksHistoryThunks';
 
 interface TrackState {
-  historyTrack: ApiTrackHistory | null;
-  historyTracks: HistoryTrack[];
+  items: HistoryTrack[];
   historyTracksLoading: boolean;
+  historyTrackCreating: boolean;
 }
 
 const initialState: TrackState = {
-  historyTrack: null,
-  historyTracks: [],
+  items: [],
   historyTracksLoading: false,
+  historyTrackCreating: false,
 };
 
-export const tracksSlice = createSlice({
+export const tracksHistorySlice = createSlice({
   name: 'historyTracks',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(addToHistory.pending, (state) => {
-        state.historyTracksLoading = true;
+        state.historyTrackCreating = true;
       })
-      .addCase(addToHistory.fulfilled, (state, { payload: historyTrack }) => {
-        state.historyTracksLoading = false;
-        state.historyTrack = historyTrack;
+      .addCase(addToHistory.fulfilled, (state) => {
+        state.historyTrackCreating = false;
       })
       .addCase(addToHistory.rejected, (state) => {
-        state.historyTracksLoading = false;
-      })
+        state.historyTrackCreating = false;
+      });
+
+    builder
       .addCase(fetchTrackHistory.pending, (state) => {
         state.historyTracksLoading = true;
       })
@@ -37,7 +38,7 @@ export const tracksSlice = createSlice({
         fetchTrackHistory.fulfilled,
         (state, { payload: historyTracks }) => {
           state.historyTracksLoading = false;
-          state.historyTracks = historyTracks;
+          state.items = historyTracks;
         },
       )
       .addCase(fetchTrackHistory.rejected, (state) => {
@@ -45,16 +46,16 @@ export const tracksSlice = createSlice({
       });
   },
   selectors: {
-    selectHistoryTrack: (state) => state.historyTrack,
-    selectHistoryTracks: (state) => state.historyTracks,
+    selectHistoryTracks: (state) => state.items,
     selectHistoryTracksLoading: (state) => state.historyTracksLoading,
+    selectHistoryTracksCreating: (state) => state.historyTrackCreating,
   },
 });
 
-export const historyTracksReducer = tracksSlice.reducer;
+export const historyTracksReducer = tracksHistorySlice.reducer;
 
 export const {
-  selectHistoryTrack,
   selectHistoryTracks,
   selectHistoryTracksLoading,
-} = tracksSlice.selectors;
+  selectHistoryTracksCreating,
+} = tracksHistorySlice.selectors;

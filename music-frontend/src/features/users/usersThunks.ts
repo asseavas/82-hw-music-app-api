@@ -8,6 +8,7 @@ import {
   ValidationError,
 } from '../../types';
 import axiosApi from '../../axiosApi';
+import { unsetUser } from './usersSlice';
 
 export const register = createAsyncThunk<
   User,
@@ -55,4 +56,9 @@ export const login = createAsyncThunk<
 
     throw error;
   }
+});
+
+export const logout = createAsyncThunk('users/logout', async (_arg, { dispatch }) => {
+  await axiosApi.delete('/users/sessions');
+  dispatch(unsetUser());
 });

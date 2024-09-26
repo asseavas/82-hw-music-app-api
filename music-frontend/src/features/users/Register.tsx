@@ -11,13 +11,15 @@ import {
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectRegisterError } from './usersSlice';
+import { selectRegisterError, selectRegisterLoading } from './usersSlice';
 import { register } from './usersThunks';
 import { RegisterMutation } from '../../types';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
+  const isLoading = useAppSelector(selectRegisterLoading);
   const navigate = useNavigate();
   const [state, setState] = useState<RegisterMutation>({
     username: '',
@@ -39,7 +41,7 @@ const Register = () => {
       await dispatch(register(state)).unwrap();
       navigate('/');
     } catch (error) {
-      //error
+      toast.error('Registration failed!');
     }
   };
 
@@ -96,6 +98,7 @@ const Register = () => {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2, backgroundColor: 'grey' }}
+          disabled={isLoading}
         >
           Sign up
         </Button>

@@ -1,12 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Artist } from '../../types';
-import { fetchArtists, fetchOneArtist } from './artistsThunks';
+import { createArtist, deleteArtist, fetchArtists, fetchOneArtist } from './artistsThunks';
 
 export interface ArtistsState {
   items: Artist[];
   artist: Artist | null;
   itemsFetching: boolean;
   oneFetching: boolean;
+  isCreating: boolean;
+  deletingArtistId: string | null;
+  isDeleting: boolean;
 }
 
 const initialState: ArtistsState = {
@@ -14,6 +17,9 @@ const initialState: ArtistsState = {
   artist: null,
   itemsFetching: false,
   oneFetching: false,
+  isCreating: false,
+  deletingArtistId: null,
+  isDeleting: false,
 };
 
 export const artistsSlice = createSlice({
@@ -45,12 +51,36 @@ export const artistsSlice = createSlice({
       .addCase(fetchOneArtist.rejected, (state) => {
         state.oneFetching = false;
       });
+
+    builder
+      .addCase(createArtist.pending, (state) => {
+        state.isCreating = true;
+      })
+      .addCase(createArtist.fulfilled, (state) => {
+        state.isCreating = false;
+      })
+      .addCase(createArtist.rejected, (state) => {
+        state.isCreating = false;
+      });
+
+    builder
+      .addCase(deleteArtist.pending, (state, action) => {
+        state.deletingArtistId = action.meta.arg;
+        state.isDeleting = true;
+      }).addCase(deleteArtist.fulfilled, (state) => {
+      state.deletingArtistId = null;
+      state.isDeleting = false;
+    }).addCase(deleteArtist.rejected, (state) => {
+      state.isDeleting = false;
+    });
   },
   selectors: {
     selectArtists: (state) => state.items,
     selectArtistsFetching: (state) => state.itemsFetching,
     selectOneArtist: (state) => state.artist,
     selectOneArtistFetching: (state) => state.oneFetching,
+    selectArtistCreating: (state) => state.isCreating,
+    selectArtistDeleting: (state) => state.isDeleting,
   },
 });
 
@@ -61,4 +91,6 @@ export const {
   selectArtistsFetching,
   selectOneArtist,
   selectOneArtistFetching,
+  selectArtistCreating,
+  selectArtistDeleting,
 } = artistsSlice.selectors;

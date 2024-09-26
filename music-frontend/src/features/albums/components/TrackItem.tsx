@@ -8,15 +8,21 @@ interface Props {
   track: AlbumTrack;
   user: User | null;
   onClick: VoidFunction;
+  addToHistoryLoading: boolean;
 }
 
-const AlbumTrackItem: React.FC<Props> = ({ track, user, onClick }) => {
+const AlbumTrackItem: React.FC<Props> = ({
+  track,
+  user,
+  onClick,
+  addToHistoryLoading,
+}) => {
   return (
     <TrackItem>
       <Typography sx={{ width: '30px' }}>{track.number}</Typography>
       {user && (
         <Tooltip title="Play">
-          <IconButton onClick={onClick}>
+          <IconButton onClick={onClick} disabled={addToHistoryLoading}>
             <PlayArrowIcon />
           </IconButton>
         </Tooltip>

@@ -22,13 +22,14 @@ const StyledLink = styled(Link)({
 
 const AppToolbar = () => {
   const user = useAppSelector(selectUser);
+
   return (
     <AppBar
       position="sticky"
       sx={{ mb: 2, background: 'none', paddingTop: '15px' }}
     >
       <Toolbar>
-        <Grid2 container justifyContent="space-between" align-items="center">
+        <Grid2 container align-items="center">
           <Grid2>
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               <Container maxWidth="xl">
@@ -36,7 +37,9 @@ const AppToolbar = () => {
               </Container>
             </Typography>
           </Grid2>
-          {user ? <UserMenu user={user}></UserMenu> : <AnonymousMenu />}
+          <Grid2 container>
+            {user ? <UserMenu user={user} /> : <AnonymousMenu />}
+          </Grid2>
         </Grid2>
       </Toolbar>
     </AppBar>

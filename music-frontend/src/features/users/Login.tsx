@@ -13,12 +13,13 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { LoginMutation } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectLoginError } from './usersSlice';
+import { selectLoginError, selectLoginLoading } from './usersSlice';
 import { login } from './usersThunks';
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectLoginError);
+  const isLoading = useAppSelector(selectLoginLoading);
   const navigate = useNavigate();
   const [state, setState] = useState<LoginMutation>({
     username: '',
@@ -85,6 +86,7 @@ const Login = () => {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2, backgroundColor: 'grey' }}
+          disabled={isLoading}
         >
           Sign in
         </Button>

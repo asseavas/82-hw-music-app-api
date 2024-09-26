@@ -22,7 +22,8 @@ import {
 } from '../../constants';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { selectUser } from '../users/usersSlice';
-import { addToHistory } from '../tracks/tracksThunks';
+import { addToHistory } from '../tracks/tracksHistoryThunks';
+import { selectHistoryTracksCreating } from '../tracks/tracksHistorySlice';
 
 const bull = (
   <Box
@@ -39,6 +40,7 @@ const OneAlbum = () => {
   const album = useAppSelector(selectOneAlbum);
   const isFetching = useAppSelector(selectOneAlbumFetching);
   const user = useAppSelector(selectUser);
+  const isCreating = useAppSelector(selectHistoryTracksCreating);
 
   let albumImage = imageNotFound;
 
@@ -137,14 +139,27 @@ const OneAlbum = () => {
               </IconButton>
             </AlbumTracksInfoContainer>
             <Grid2>
-              {album.tracks.map((track) => (
-                <AlbumTrackItem
-                  key={track._id}
-                  track={track}
-                  user={user}
-                  onClick={() => addTrackToHistory(track._id)}
-                />
-              ))}
+              {album.tracks.length > 0 ? (
+                album.tracks.map((track) => (
+                  <AlbumTrackItem
+                    key={track._id}
+                    track={track}
+                    user={user}
+                    onClick={() => addTrackToHistory(track._id)}
+                    addToHistoryLoading={isCreating}
+                  />
+                ))
+              ) : (
+                <Grid2 container mt={5} mb={3}>
+                  <Grid2
+                    component={Typography}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    There are no songs here!
+                  </Grid2>
+                </Grid2>
+              )}
             </Grid2>
           </Grid2>
         </Grid2>

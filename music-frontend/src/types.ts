@@ -3,6 +3,7 @@ export interface Artist {
   name: string;
   image: string | null;
   information: string | null;
+  isPublished: boolean;
 }
 
 export interface Album {
@@ -14,6 +15,7 @@ export interface Album {
   title: string;
   releaseYear: number;
   image: string | null;
+  isPublished: boolean;
 }
 
 export interface AlbumTrack {
@@ -21,6 +23,7 @@ export interface AlbumTrack {
   number: number;
   title: string;
   duration: string;
+  isPublished: boolean;
 }
 
 export interface AlbumInfo {
@@ -32,13 +35,44 @@ export interface AlbumInfo {
   image: string | null;
 }
 
-export interface ApiTrackHistory {
+export interface ArtistMutation {
+  name: string;
+  image: File | null;
+  information: string | null;
+}
+
+export interface AlbumMutation {
+  artist: string;
+  title: string;
+  releaseYear: string;
+  image: File | null;
+}
+
+export interface TrackMutation {
+  album: string;
+  title: string;
+  duration: string;
+  number: number;
+}
+
+export interface TrackHistoryMutation {
   track: string;
 }
 
-export interface HistoryTrack {
+export interface HistoryTrackArtistName {
+  _id: string;
+  name: string;
+}
+
+export interface HistoryTrackTitle {
+  _id: string;
   title: string;
-  artist: string;
+}
+
+export interface HistoryTrack {
+  _id: string;
+  artist: HistoryTrackArtistName;
+  title: HistoryTrackTitle;
   datetime: string;
 }
 
@@ -56,6 +90,7 @@ export interface User {
   _id: string;
   username: string;
   token: string;
+  role: string;
 }
 
 export interface ValidationError {
