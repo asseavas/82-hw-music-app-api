@@ -1,15 +1,17 @@
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectArtists, selectArtistsFetching } from './artistsSlice';
-import React, { useEffect } from 'react';
 import { fetchArtists } from './artistsThunks';
 import { CircularProgress, Grid2, Typography } from '@mui/material';
 import ArtistCard from './components/ArtistCard';
 import { ContentContainer } from '../../constants';
+import { selectUser } from '../users/usersSlice';
 
 const Artists = () => {
   const dispatch = useAppDispatch();
   const artists = useAppSelector(selectArtists);
   const isFetching = useAppSelector(selectArtistsFetching);
+  const user = useAppSelector(selectUser);
 
   let content: React.ReactNode = (
     <Grid2 container mt={5} mb={5}>
@@ -22,9 +24,15 @@ const Artists = () => {
   if (isFetching) {
     content = <CircularProgress />;
   } else if (artists.length > 0) {
-    content = artists.map((artist) => (
-      <ArtistCard key={artist._id} artist={artist} />
-    ));
+    const visibleArtists = artists.filter((artist) => {
+      return artist.isPublished || (user && artist.user === user._id) || (user && user.role === 'admin');
+    });
+
+    if (visibleArtists.length > 0) {
+      content = visibleArtists.map((artist) => (
+        <ArtistCard key={artist._id} artist={artist} />
+      ));
+    }
   }
 
   useEffect(() => {

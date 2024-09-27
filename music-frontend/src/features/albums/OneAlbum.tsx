@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectOneAlbum, selectOneAlbumFetching } from './albumsSlice';
@@ -12,7 +12,7 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-import AlbumTrackItem from './components/TrackItem';
+import AlbumTrackItem from '../tracks/components/TrackItem';
 import {
   AlbumImageContainer,
   AlbumTracksInfoContainer,
@@ -22,8 +22,8 @@ import {
 } from '../../constants';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { selectUser } from '../users/usersSlice';
-import { addToHistory } from '../tracks/tracksHistoryThunks';
-import { selectHistoryTracksCreating } from '../tracks/tracksHistorySlice';
+import { addToHistory } from '../trackHistory/tracksHistoryThunks';
+import { selectHistoryTracksCreating } from '../trackHistory/tracksHistorySlice';
 
 const bull = (
   <Box
@@ -41,14 +41,44 @@ const OneAlbum = () => {
   const isFetching = useAppSelector(selectOneAlbumFetching);
   const user = useAppSelector(selectUser);
   const isCreating = useAppSelector(selectHistoryTracksCreating);
-
+  const artistAvatarImage = `${API_URL}/${album?.artist.image}`;
   let albumImage = imageNotFound;
 
   if (album?.image) {
     albumImage = `${API_URL}/${album.image}`;
   }
 
-  const artistAvatarImage = `${API_URL}/${album?.artist.image}`;
+  let content: React.ReactNode = (
+    <Grid2 container mt={5} mb={5}>
+      <Grid2 component={Typography} variant="body2" color="text.secondary">
+        There are no songs here!
+      </Grid2>
+    </Grid2>
+  );
+
+  if (isFetching) {
+    content = <CircularProgress />;
+  } else if (album && album.tracks.length > 0) {
+    const visibleTracks = album.tracks.filter((track) => {
+      return (
+        track.isPublished ||
+        (user && track.user === user._id) ||
+        (user && user.role === 'admin')
+      );
+    });
+
+    if (visibleTracks.length > 0) {
+      content = visibleTracks.map((track) => (
+        <AlbumTrackItem
+          key={track._id}
+          track={track}
+          user={user}
+          onClick={() => addTrackToHistory(track._id)}
+          addToHistoryLoading={isCreating}
+        />
+      ));
+    }
+  }
 
   const addTrackToHistory = (trackId: string) => {
     dispatch(addToHistory({ track: trackId }));
@@ -132,35 +162,13 @@ const OneAlbum = () => {
           </AlbumImageContainer>
           <Grid2 container spacing={2} direction="column" sx={{ pl: 3, pr: 3 }}>
             <AlbumTracksInfoContainer>
-              <Typography sx={{ width: '30px' }}>#</Typography>
+              <Typography sx={{ width: '35px' }}>#</Typography>
               <Typography>Title</Typography>
-              <IconButton sx={{ ml: 'auto', width: 2 }} disabled>
+              <IconButton sx={{ ml: 'auto', width: 2, mr: 2 }} disabled>
                 <AccessTimeOutlinedIcon />
               </IconButton>
             </AlbumTracksInfoContainer>
-            <Grid2>
-              {album.tracks.length > 0 ? (
-                album.tracks.map((track) => (
-                  <AlbumTrackItem
-                    key={track._id}
-                    track={track}
-                    user={user}
-                    onClick={() => addTrackToHistory(track._id)}
-                    addToHistoryLoading={isCreating}
-                  />
-                ))
-              ) : (
-                <Grid2 container mt={5} mb={3}>
-                  <Grid2
-                    component={Typography}
-                    variant="body2"
-                    color="text.secondary"
-                  >
-                    There are no songs here!
-                  </Grid2>
-                </Grid2>
-              )}
-            </Grid2>
+            <Grid2>{content}</Grid2>
           </Grid2>
         </Grid2>
       )}

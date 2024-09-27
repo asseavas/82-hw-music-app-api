@@ -30,12 +30,14 @@ tracksRouter.get('/', async (req, res, next) => {
 
 tracksRouter.post('/', auth, async (req: RequestWithUser, res, next) => {
   try {
+    const tracksInAlbum = await Track.countDocuments({ album: req.body.album });
+
     const track = await Track.create({
       album: req.body.album,
       user: req.user?._id,
       title: req.body.title,
       duration: req.body.duration,
-      number: req.body.number,
+      number: tracksInAlbum + 1,
     });
 
     return res.send(track);
@@ -48,54 +50,66 @@ tracksRouter.post('/', auth, async (req: RequestWithUser, res, next) => {
   }
 });
 
-tracksRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
-  try {
-    const { id } = req.params;
+tracksRouter.delete(
+  '/:id',
+  auth,
+  permit('admin'),
+  async (req: RequestWithUser, res, next) => {
+    try {
+      const { id } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).send({ error: 'Invalid track ID' });
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).send({ error: 'Invalid track ID' });
+      }
+
+      if (!req.user) {
+        return res.status(401).send({ error: 'User not found' });
+      }
+
+      const track = await Track.findById(id);
+
+      if (!track) {
+        return res.status(404).send({ error: 'Track not found' });
+      }
+
+      await Track.findByIdAndDelete(id);
+
+      return res.send({ message: 'Track deleted successfully' });
+    } catch (error) {
+      next(error);
     }
+  },
+);
 
-    if (!req.user) {
-      return res.status(401).send({ error: 'User not found' });
+tracksRouter.patch(
+  '/:id/togglePublished',
+  auth,
+  permit('admin'),
+  async (req: RequestWithUser, res, next) => {
+    try {
+      const { id } = req.params;
+
+      if (!req.user) {
+        return res.status(401).send({ error: 'User not found' });
+      }
+
+      const track = await Track.findById(id);
+
+      if (!track) {
+        return res.status(404).send({ error: 'Track not found' });
+      }
+
+      track.isPublished = !track.isPublished;
+
+      await track.save();
+
+      return res.send({
+        message: `Album's isPublished status updated to ${track.isPublished}`,
+      });
+    } catch (error) {
+      next(error);
     }
-
-    const track = await Track.findById(id);
-
-    if (!track) {
-      return res.status(404).send({ error: 'Track not found' });
-    }
-
-    await Track.findByIdAndDelete(id);
-
-    return res.send({ message: 'Track deleted successfully' });
-  } catch (error) {
-    next(error);
-  }
-});
-
-tracksRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
-  try {
-    const { id } = req.params;
-
-    if (!req.user) {
-      return res.status(401).send({ error: 'User not found' });
-    }
-
-    const track = await Track.findById(id);
-
-    if (!track) {
-      return res.status(404).send({ error: 'Track not found' });
-    }
-
-    track.isPublished = !track.isPublished;
-
-    await track.save();
-
-    return res.send({ message: `Album's isPublished status updated to ${track.isPublished}` });
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 export default tracksRouter;

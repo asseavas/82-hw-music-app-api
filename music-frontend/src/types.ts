@@ -1,5 +1,6 @@
 export interface Artist {
   _id: string;
+  user: string;
   name: string;
   image: string | null;
   information: string | null;
@@ -12,6 +13,7 @@ export interface Album {
     _id: string;
     name: string;
   };
+  user: string;
   title: string;
   releaseYear: number;
   image: string | null;
@@ -20,6 +22,7 @@ export interface Album {
 
 export interface AlbumTrack {
   _id: string;
+  user: string;
   number: number;
   title: string;
   duration: string;
@@ -52,7 +55,6 @@ export interface TrackMutation {
   album: string;
   title: string;
   duration: string;
-  number: number;
 }
 
 export interface TrackHistoryMutation {

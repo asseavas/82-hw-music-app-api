@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectOneArtist, selectOneArtistFetching } from './artistsSlice';
@@ -15,6 +15,7 @@ import { selectAlbums, selectAlbumsFetching } from '../albums/albumsSlice';
 import AlbumCard from '../albums/components/AlbumCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { API_URL, ContentContainer } from '../../constants';
+import { selectUser } from '../users/usersSlice';
 
 const OneArtist = () => {
   const { id } = useParams() as { id: string };
@@ -23,8 +24,8 @@ const OneArtist = () => {
   const albums = useAppSelector(selectAlbums);
   const albumsFetching = useAppSelector(selectAlbumsFetching);
   const isFetching = useAppSelector(selectOneArtistFetching);
+  const user = useAppSelector(selectUser);
   const artistImage = `${API_URL}/${artist?.image}`;
-
   const ImageBox = styled(Grid2)({
     padding: '30px',
     display: 'flex',
@@ -37,6 +38,32 @@ const OneArtist = () => {
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
   });
+
+  let content: React.ReactNode = (
+    <Grid2 container mt={5} mb={5}>
+      <Grid2 component={Typography} variant="body2" color="text.secondary">
+        No albums available
+      </Grid2>
+    </Grid2>
+  );
+
+  if (albumsFetching) {
+    content = <CircularProgress />;
+  } else if (albums.length > 0) {
+    const visibleAlbums = albums.filter((album) => {
+      return (
+        album.isPublished ||
+        (user && album.user === user._id) ||
+        (user && user.role === 'admin')
+      );
+    });
+
+    if (visibleAlbums.length > 0) {
+      content = visibleAlbums.map((album) => (
+        <AlbumCard album={album} key={album._id} />
+      ));
+    }
+  }
 
   useEffect(() => {
     dispatch(fetchOneArtist(id));
@@ -86,28 +113,7 @@ const OneArtist = () => {
             >
               Albums
             </Grid2>
-            <Grid2>
-              {albumsFetching && (
-                <Grid2>
-                  <CircularProgress />
-                </Grid2>
-              )}
-              {albums && albums.length > 0 ? (
-                albums.map((album) => (
-                  <AlbumCard album={album} key={album._id} />
-                ))
-              ) : (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  ml={2}
-                  mt={3}
-                  mb={3}
-                >
-                  No albums available
-                </Typography>
-              )}
-            </Grid2>
+            <Grid2>{content}</Grid2>
           </Grid2>
         </ContentContainer>
       )}

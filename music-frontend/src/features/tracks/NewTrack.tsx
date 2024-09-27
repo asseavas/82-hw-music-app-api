@@ -1,21 +1,21 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { AlbumMutation } from '../../types';
+import { TrackMutation } from '../../types';
 import { toast } from 'react-toastify';
 import { Container, Grid2, Typography } from '@mui/material';
-import AlbumForm from './components/AlbumForm';
-import { selectAlbumCreating } from './albumsSlice';
-import { createAlbum } from './albumsThunks';
+import { selectTrackCreating } from './tracksSlice';
+import { createTrack } from './tracksThunks';
+import TrackForm from './components/TrackForm';
 
-const NewAlbum = () => {
+const NewTrack = () => {
   const dispatch = useAppDispatch();
-  const isCreating = useAppSelector(selectAlbumCreating);
+  const isCreating = useAppSelector(selectTrackCreating);
 
-  const onFormSubmit = async (albumMutation: AlbumMutation) => {
+  const onFormSubmit = async (trackMutation: TrackMutation) => {
     try {
-      await dispatch(createAlbum(albumMutation));
-      toast.success('New album created');
+      await dispatch(createTrack(trackMutation));
+      toast.success('New track created');
     } catch (error) {
-      toast.error('No new album created');
+      toast.error('No new track created');
     }
   };
 
@@ -25,11 +25,11 @@ const NewAlbum = () => {
         <Grid2 container direction="column" mt={4}>
           <Grid2>
             <Typography variant="h4" mb={4} fontWeight="bold">
-              New album
+              New track
             </Typography>
           </Grid2>
           <Grid2 justifyContent="space-between">
-            <AlbumForm onSubmit={onFormSubmit} isLoading={isCreating} />
+            <TrackForm onSubmit={onFormSubmit} isLoading={isCreating} />
           </Grid2>
         </Grid2>
       </Container>
@@ -37,4 +37,4 @@ const NewAlbum = () => {
   );
 };
 
-export default NewAlbum;
+export default NewTrack;

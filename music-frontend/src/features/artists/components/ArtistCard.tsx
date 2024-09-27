@@ -16,7 +16,7 @@ const ArtistCard: React.FC<Props> = ({ artist }) => {
   }
 
   return (
-    <CardItem to={`/artists/${artist._id}`} sx={{ height: '270px' }}>
+    <CardItem to={`/artists/${artist._id}`} sx={{ height: '290px' }}>
       <Grid2 container direction="column" spacing={1}>
         <Grid2
           component={Avatar}
@@ -30,10 +30,13 @@ const ArtistCard: React.FC<Props> = ({ artist }) => {
         />
       </Grid2>
       <Grid2>
-        <Typography sx={{ mb: '3px' }}>{artist.name}</Typography>
+        <Typography sx={{ mt: 1,mb: '3px' }}>{artist.name}</Typography>
         <Typography variant="body2" color="text.secondary">
           Artist
         </Typography>
+        {!artist.isPublished && (
+          <Typography variant="body2" sx={{ padding: '4px 8px', marginTop: '4px', backgroundColor: '#333', borderRadius: '6px'}}>Unpublished</Typography>
+        )}
       </Grid2>
     </CardItem>
   );

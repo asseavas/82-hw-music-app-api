@@ -32,6 +32,9 @@ const AlbumCard: React.FC<Props> = ({ album }) => {
           <Typography color="text.secondary" variant="body2">
             {album.releaseYear} • Album
           </Typography>
+          {!album.isPublished && (
+            <Typography variant="body2" sx={{ padding: '4px 8px', mt: 1, backgroundColor: '#333', borderRadius: '6px'}}>Unpublished</Typography>
+          )}
         </Grid2>
       </Grid2>
     </CardItem>

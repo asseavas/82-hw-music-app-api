@@ -27,11 +27,11 @@ const UserMenu: React.FC<Props> = ({ user }) => {
   };
 
   return (
-    <Grid2 container>
+    <Grid2 container spacing={4} width="100%">
       <Grid2 component={StyledLink} to="/track_history">
         {user.username}'s tracks history
       </Grid2>
-      <Grid2 container spacing={1} alignItems="center">
+      <Grid2 container spacing={4} alignItems="center">
         <Grid2>
           <Button onClick={handleClick} color="inherit">
             Add new

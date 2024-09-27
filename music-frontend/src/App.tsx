@@ -6,12 +6,13 @@ import OneArtist from './features/artists/OneArtist';
 import OneAlbum from './features/albums/OneAlbum';
 import Register from './features/users/Register';
 import Login from './features/users/Login';
-import TrackHistory from './features/tracks/TrackHistory';
+import TrackHistory from './features/trackHistory/TrackHistory';
 import ProtectedRoute from './UI/ProtectedRoute/ProtectedRoute';
 import { selectUser } from './features/users/usersSlice';
 import { useAppSelector } from './app/hooks';
 import NewArtist from './features/artists/NewArtist';
 import NewAlbum from './features/albums/NewAlbum';
+import NewTrack from './features/tracks/NewTrack';
 
 const App = () => {
   const user = useAppSelector(selectUser);
@@ -27,19 +28,25 @@ const App = () => {
           <Route
             path="/artists/new"
             element={
-            <ProtectedRoute isAllowed={user !== null}><NewArtist /></ProtectedRoute>
+              <ProtectedRoute isAllowed={user !== null}>
+                <NewArtist />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/albums/new"
             element={
-            <ProtectedRoute isAllowed={user !== null}><NewAlbum /></ProtectedRoute>
+              <ProtectedRoute isAllowed={user !== null}>
+                <NewAlbum />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/tracks/new"
             element={
-            <ProtectedRoute isAllowed={user !== null}><TrackHistory /></ProtectedRoute>
+              <ProtectedRoute isAllowed={user !== null}>
+                <NewTrack />
+              </ProtectedRoute>
             }
           />
           <Route path="/artists/:id" element={<OneArtist />} />
@@ -47,7 +54,9 @@ const App = () => {
           <Route
             path="/track_history"
             element={
-            <ProtectedRoute isAllowed={user !== null}><TrackHistory /></ProtectedRoute>
+              <ProtectedRoute isAllowed={user !== null}>
+                <TrackHistory />
+              </ProtectedRoute>
             }
           />
           <Route path="/register" element={<Register />}></Route>

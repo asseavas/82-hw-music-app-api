@@ -17,10 +17,11 @@ const AlbumTrackItem: React.FC<Props> = ({
   onClick,
   addToHistoryLoading,
 }) => {
+  console.log(track.user);
   return (
     <TrackItem>
-      <Typography sx={{ width: '30px' }}>{track.number}</Typography>
-      {user && (
+      <Typography sx={{ width: '35px' }}>{track.number}</Typography>
+      {user && track.isPublished && (
         <Tooltip title="Play">
           <IconButton onClick={onClick} disabled={addToHistoryLoading}>
             <PlayArrowIcon />
@@ -28,6 +29,11 @@ const AlbumTrackItem: React.FC<Props> = ({
         </Tooltip>
       )}
       <Typography>{track.title}</Typography>
+      {!track.isPublished && (
+        <Typography variant="body2" color="textSecondary" ml={5}>
+          Unpublished
+        </Typography>
+      )}
       <Box ml="auto" sx={{ width: '40px' }}>
         <Typography mr="auto" color="text.secondary">
           {track.duration}
