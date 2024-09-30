@@ -20,23 +20,33 @@ export const fetchOneAlbum = createAsyncThunk<AlbumInfo, string>(
   },
 );
 
-export const createAlbum = createAsyncThunk<void, AlbumMutation>('albums/create', async (albumMutation) => {
-  const formData = new FormData();
+export const createAlbum = createAsyncThunk<void, AlbumMutation>(
+  'albums/create',
+  async (albumMutation) => {
+    const formData = new FormData();
 
-  const keys = Object.keys(albumMutation) as (keyof AlbumMutation)[];
-  keys.forEach((key) => {
-    const value = albumMutation[key];
-    if (value !== null) {
-      formData.append(key, value);
-    }
-  });
+    const keys = Object.keys(albumMutation) as (keyof AlbumMutation)[];
+    keys.forEach((key) => {
+      const value = albumMutation[key];
+      if (value !== null) {
+        formData.append(key, value);
+      }
+    });
 
-  await axiosApi.post('/albums', formData);
-});
+    await axiosApi.post('/albums', formData);
+  },
+);
 
 export const deleteAlbum = createAsyncThunk<void, string>(
   'albums/delete',
   async (id) => {
     await axiosApi.delete(`/albums/${id}`);
+  },
+);
+
+export const publishAlbum = createAsyncThunk<void, string>(
+  'albums/publish',
+  async (id) => {
+    await axiosApi.patch(`/albums/${id}/togglePublished`);
   },
 );

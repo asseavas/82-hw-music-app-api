@@ -10,12 +10,18 @@ import {
   styled,
   Typography,
 } from '@mui/material';
-import { fetchAlbums } from '../albums/albumsThunks';
-import { selectAlbums, selectAlbumsFetching } from '../albums/albumsSlice';
+import { deleteAlbum, fetchAlbums, publishAlbum } from '../albums/albumsThunks';
+import {
+  selectAlbumDeleting,
+  selectAlbumPublication,
+  selectAlbums,
+  selectAlbumsFetching,
+} from '../albums/albumsSlice';
 import AlbumCard from '../albums/components/AlbumCard';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { API_URL, ContentContainer } from '../../constants';
 import { selectUser } from '../users/usersSlice';
+import { toast } from 'react-toastify';
 
 const OneArtist = () => {
   const { id } = useParams() as { id: string };
@@ -24,6 +30,8 @@ const OneArtist = () => {
   const albums = useAppSelector(selectAlbums);
   const albumsFetching = useAppSelector(selectAlbumsFetching);
   const isFetching = useAppSelector(selectOneArtistFetching);
+  const isDeleting = useAppSelector(selectAlbumDeleting);
+  const isPublication = useAppSelector(selectAlbumPublication);
   const user = useAppSelector(selectUser);
   const artistImage = `${API_URL}/${artist?.image}`;
   const ImageBox = styled(Grid2)({
@@ -38,6 +46,30 @@ const OneArtist = () => {
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
   });
+
+  const handleDeleteAlbum = async (albumId: string) => {
+    try {
+      if (window.confirm('Are you sure you want to delete this album?')) {
+        await dispatch(deleteAlbum(albumId)).unwrap();
+        await dispatch(fetchAlbums(id));
+        toast.success('The album has been deleted!');
+      }
+    } catch (error) {
+      toast.error('The album has not been deleted!');
+    }
+  };
+
+  const handlePublishAlbum = async (albumId: string) => {
+    try {
+      if (window.confirm('Are you sure you want to publish this album?')) {
+        await dispatch(publishAlbum(albumId)).unwrap();
+        await dispatch(fetchAlbums(id));
+        toast.success('The album has been published!');
+      }
+    } catch (error) {
+      toast.error('The album has not been published!');
+    }
+  };
 
   let content: React.ReactNode = (
     <Grid2 container mt={5} mb={5}>
@@ -60,7 +92,14 @@ const OneArtist = () => {
 
     if (visibleAlbums.length > 0) {
       content = visibleAlbums.map((album) => (
-        <AlbumCard album={album} key={album._id} />
+        <AlbumCard
+          album={album}
+          key={album._id}
+          isDeleting={isDeleting}
+          onDelete={() => handleDeleteAlbum(album._id)}
+          isPublication={isPublication}
+          onPublish={() => handlePublishAlbum(album._id)}
+        />
       ));
     }
   }

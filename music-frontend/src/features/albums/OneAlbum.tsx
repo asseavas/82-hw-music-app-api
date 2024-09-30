@@ -24,6 +24,12 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import { selectUser } from '../users/usersSlice';
 import { addToHistory } from '../trackHistory/tracksHistoryThunks';
 import { selectHistoryTracksCreating } from '../trackHistory/tracksHistorySlice';
+import {
+  selectTrackDeleting,
+  selectTrackPublication,
+} from '../tracks/tracksSlice';
+import { toast } from 'react-toastify';
+import { deleteTrack, publishTrack } from '../tracks/tracksThunks';
 
 const bull = (
   <Box
@@ -39,6 +45,8 @@ const OneAlbum = () => {
   const dispatch = useAppDispatch();
   const album = useAppSelector(selectOneAlbum);
   const isFetching = useAppSelector(selectOneAlbumFetching);
+  const isDeleting = useAppSelector(selectTrackDeleting);
+  const isPublication = useAppSelector(selectTrackPublication);
   const user = useAppSelector(selectUser);
   const isCreating = useAppSelector(selectHistoryTracksCreating);
   const artistAvatarImage = `${API_URL}/${album?.artist.image}`;
@@ -47,6 +55,30 @@ const OneAlbum = () => {
   if (album?.image) {
     albumImage = `${API_URL}/${album.image}`;
   }
+
+  const handleDeleteTrack = async (trackId: string) => {
+    try {
+      if (window.confirm('Are you sure you want to delete this track?')) {
+        await dispatch(deleteTrack(trackId)).unwrap();
+        await dispatch(fetchOneAlbum(id));
+        toast.success('The track has been deleted!');
+      }
+    } catch (error) {
+      toast.error('The track has not been deleted!');
+    }
+  };
+
+  const handlePublishTrack = async (trackId: string) => {
+    try {
+      if (window.confirm('Are you sure you want to publish this track?')) {
+        await dispatch(publishTrack(trackId)).unwrap();
+        await dispatch(fetchOneAlbum(id));
+        toast.success('The track has been published!');
+      }
+    } catch (error) {
+      toast.error('The track has not been published!');
+    }
+  };
 
   let content: React.ReactNode = (
     <Grid2 container mt={5} mb={5}>
@@ -75,6 +107,10 @@ const OneAlbum = () => {
           user={user}
           onClick={() => addTrackToHistory(track._id)}
           addToHistoryLoading={isCreating}
+          isDeleting={isDeleting}
+          onDelete={() => handleDeleteTrack(track._id)}
+          isPublication={isPublication}
+          onPublish={() => handlePublishTrack(track._id)}
         />
       ));
     }

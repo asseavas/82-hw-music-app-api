@@ -10,7 +10,7 @@ interface Props {
   isLoading: boolean;
 }
 
-const ArtistForm: React.FC<Props> = ({onSubmit, isLoading}) => {
+const ArtistForm: React.FC<Props> = ({ onSubmit, isLoading }) => {
   const [error, setError] = useState<string | null>(null);
   const [state, setState] = useState<ArtistMutation>({
     name: '',
@@ -21,8 +21,8 @@ const ArtistForm: React.FC<Props> = ({onSubmit, isLoading}) => {
   const submitFormHandler = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!state.name.trim() || !state.information?.trim()) {
-      setError('Name and information cannot be empty or just whitespace.');
+    if (!state.name.trim()) {
+      setError('Name cannot be empty or just whitespace.');
       return;
     }
 
@@ -35,7 +35,9 @@ const ArtistForm: React.FC<Props> = ({onSubmit, isLoading}) => {
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const fileInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const fileInputChangeHandler = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { name, files } = event.target;
     const value = files && files[0] ? files[0] : null;
 
@@ -81,7 +83,11 @@ const ArtistForm: React.FC<Props> = ({onSubmit, isLoading}) => {
         />
       </Grid2>
       <Grid2 width="100%">
-        <FileInput label="Image" name="image" onChange={fileInputChangeHandler} />
+        <FileInput
+          label="Image"
+          name="image"
+          onChange={fileInputChangeHandler}
+        />
       </Grid2>
       <Grid2 width="100%">
         <LoadingButton

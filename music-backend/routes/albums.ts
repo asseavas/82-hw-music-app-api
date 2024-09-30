@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 import Track from '../models/Track';
 import auth, { RequestWithUser } from '../middleware/auth';
 import permit from '../middleware/permit';
-import Artist from '../models/Artist';
 
 const albumsRouter = express.Router();
 
@@ -100,7 +99,7 @@ albumsRouter.delete(
         return res.status(404).send({ error: 'Album not found' });
       }
 
-      await Artist.findByIdAndDelete(id);
+      await Album.findByIdAndDelete(id);
 
       return res.send({ message: 'Album deleted successfully' });
     } catch (error) {

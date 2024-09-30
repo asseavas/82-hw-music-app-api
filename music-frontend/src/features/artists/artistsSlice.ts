@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Artist } from '../../types';
-import { createArtist, deleteArtist, fetchArtists, fetchOneArtist } from './artistsThunks';
+import {
+  createArtist,
+  deleteArtist,
+  fetchArtists,
+  fetchOneArtist,
+  publishArtist,
+} from './artistsThunks';
 
 export interface ArtistsState {
   items: Artist[];
@@ -10,6 +16,8 @@ export interface ArtistsState {
   isCreating: boolean;
   deletingArtistId: string | null;
   isDeleting: boolean;
+  publishArtistId: string | null;
+  isPublication: boolean;
 }
 
 const initialState: ArtistsState = {
@@ -20,6 +28,8 @@ const initialState: ArtistsState = {
   isCreating: false,
   deletingArtistId: null,
   isDeleting: false,
+  publishArtistId: null,
+  isPublication: false,
 };
 
 export const artistsSlice = createSlice({
@@ -67,12 +77,27 @@ export const artistsSlice = createSlice({
       .addCase(deleteArtist.pending, (state, action) => {
         state.deletingArtistId = action.meta.arg;
         state.isDeleting = true;
-      }).addCase(deleteArtist.fulfilled, (state) => {
-      state.deletingArtistId = null;
-      state.isDeleting = false;
-    }).addCase(deleteArtist.rejected, (state) => {
-      state.isDeleting = false;
-    });
+      })
+      .addCase(deleteArtist.fulfilled, (state) => {
+        state.deletingArtistId = null;
+        state.isDeleting = false;
+      })
+      .addCase(deleteArtist.rejected, (state) => {
+        state.isDeleting = false;
+      });
+
+    builder
+      .addCase(publishArtist.pending, (state, action) => {
+        state.publishArtistId = action.meta.arg;
+        state.isPublication = true;
+      })
+      .addCase(publishArtist.fulfilled, (state) => {
+        state.publishArtistId = null;
+        state.isPublication = false;
+      })
+      .addCase(publishArtist.rejected, (state) => {
+        state.isPublication = false;
+      });
   },
   selectors: {
     selectArtists: (state) => state.items,
@@ -81,6 +106,7 @@ export const artistsSlice = createSlice({
     selectOneArtistFetching: (state) => state.oneFetching,
     selectArtistCreating: (state) => state.isCreating,
     selectArtistDeleting: (state) => state.isDeleting,
+    selectArtistPublication: (state) => state.isPublication,
   },
 });
 
@@ -93,4 +119,5 @@ export const {
   selectOneArtistFetching,
   selectArtistCreating,
   selectArtistDeleting,
+  selectArtistPublication,
 } = artistsSlice.selectors;

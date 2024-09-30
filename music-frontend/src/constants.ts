@@ -46,17 +46,21 @@ export const ContentContainer = styled(Grid2)({
   paddingBottom: '32px',
 });
 
-export const CardItem = styled(Link)({
+export const CardItem = styled(Box)({
   padding: '12px',
   display: 'inline-block',
   borderRadius: '10px',
-  color: 'white',
   textDecoration: 'none',
   transition: 'background-color 0.3s ease',
   '&:hover': {
     backgroundColor: '#333',
   },
   cursor: 'pointer',
+});
+
+export const CardLinkItem = styled(Link)({
+  textDecoration: 'none',
+  color: 'white',
 });
 
 export const AlbumImageContainer = styled(Grid2)({

@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Album, AlbumInfo } from '../../types';
-import { createAlbum, deleteAlbum, fetchAlbums, fetchOneAlbum } from './albumsThunks';
+import {
+  createAlbum,
+  deleteAlbum,
+  fetchAlbums,
+  fetchOneAlbum,
+  publishAlbum,
+} from './albumsThunks';
 
 export interface AlbumsState {
   items: Album[];
@@ -10,6 +16,8 @@ export interface AlbumsState {
   isCreating: boolean;
   deletingAlbumId: string | null;
   isDeleting: boolean;
+  publishAlbumId: string | null;
+  isPublication: boolean;
 }
 
 const initialState: AlbumsState = {
@@ -20,6 +28,8 @@ const initialState: AlbumsState = {
   isCreating: false,
   deletingAlbumId: null,
   isDeleting: false,
+  publishAlbumId: null,
+  isPublication: false,
 };
 
 export const albumsSlice = createSlice({
@@ -67,12 +77,27 @@ export const albumsSlice = createSlice({
       .addCase(deleteAlbum.pending, (state, action) => {
         state.deletingAlbumId = action.meta.arg;
         state.isDeleting = true;
-      }).addCase(deleteAlbum.fulfilled, (state) => {
-      state.deletingAlbumId = null;
-      state.isDeleting = false;
-    }).addCase(deleteAlbum.rejected, (state) => {
-      state.isDeleting = false;
-    });
+      })
+      .addCase(deleteAlbum.fulfilled, (state) => {
+        state.deletingAlbumId = null;
+        state.isDeleting = false;
+      })
+      .addCase(deleteAlbum.rejected, (state) => {
+        state.isDeleting = false;
+      });
+
+    builder
+      .addCase(publishAlbum.pending, (state, action) => {
+        state.publishAlbumId = action.meta.arg;
+        state.isPublication = true;
+      })
+      .addCase(publishAlbum.fulfilled, (state) => {
+        state.publishAlbumId = null;
+        state.isPublication = false;
+      })
+      .addCase(publishAlbum.rejected, (state) => {
+        state.isPublication = false;
+      });
   },
   selectors: {
     selectAlbums: (state) => state.items,
@@ -81,6 +106,7 @@ export const albumsSlice = createSlice({
     selectOneAlbumFetching: (state) => state.oneFetching,
     selectAlbumCreating: (state) => state.isCreating,
     selectAlbumDeleting: (state) => state.isDeleting,
+    selectAlbumPublication: (state) => state.isPublication,
   },
 });
 
@@ -93,4 +119,5 @@ export const {
   selectOneAlbumFetching,
   selectAlbumCreating,
   selectAlbumDeleting,
+  selectAlbumPublication,
 } = albumsSlice.selectors;
