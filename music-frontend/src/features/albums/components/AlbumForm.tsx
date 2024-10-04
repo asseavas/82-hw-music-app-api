@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AlbumMutation } from '../../../types';
 import { CircularProgress, Grid2, MenuItem, TextField } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import {
-  selectArtists,
-  selectArtistsFetching,
-} from '../../artists/artistsSlice';
+import { selectArtists, selectArtistsFetching } from '../../artists/artistsSlice';
 import { fetchArtists } from '../../artists/artistsThunks';
 import FileInput from '../../../UI/FileInput/FileInput';
 import { LoadingButton } from '@mui/lab';
@@ -48,14 +45,7 @@ const AlbumForm: React.FC<Props> = ({ onSubmit, isLoading }) => {
     navigate(`/artists/${state.artist}`);
   };
 
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setState((prevState) => ({ ...prevState, [name]: value }));
-  };
-
-  const fileInputChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const fileInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = event.target;
     const value = files && files[0] ? files[0] : null;
 
@@ -63,6 +53,11 @@ const AlbumForm: React.FC<Props> = ({ onSubmit, isLoading }) => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   return (
@@ -125,11 +120,7 @@ const AlbumForm: React.FC<Props> = ({ onSubmit, isLoading }) => {
         />
       </Grid2>
       <Grid2 width="100%">
-        <FileInput
-          label="Image"
-          name="image"
-          onChange={fileInputChangeHandler}
-        />
+        <FileInput label="Image" name="image" onChange={fileInputChangeHandler} />
       </Grid2>
       <Grid2 width="100%">
         <LoadingButton

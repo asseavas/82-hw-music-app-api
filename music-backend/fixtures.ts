@@ -21,85 +21,89 @@ const run = async () => {
 
   const [user] = await User.create(
     {
-      username: 'user',
+      username: 'user@music.local',
       password: '1nkn$jb',
       confirmPassword: '1nkn$jb',
       role: 'user',
+      displayName: 'User',
+      avatar: 'fixtures/user_avatar.jpeg',
       token: crypto.randomUUID(),
     },
     {
-      username: 'admin',
+      username: 'admin@music.local',
       password: 'ved67#slm',
       confirmPassword: 'ved67#slm',
       role: 'admin',
+      displayName: 'Admin',
+      avatar: null,
       token: crypto.randomUUID(),
-    }
+    },
   );
 
-  const [lilPeep, lanaDelRey, joji, chetta, suicideBoys, playboiCarti, pouya, testArtist] =
-    await Artist.create(
-      {
-        user: user,
-        name: 'Lil Peep',
-        image: 'fixtures/lilpeep.jpg',
-        information:
-          'Lil Peep was an American rapper and singer known for blending emo and hip-hop in his music. He tragically passed away from a drug overdose in 2017 at the age of 21.',
-        isPublished: true,
-      },
-      {
-        user: user,
-        name: 'Lana Del Rey',
-        image: 'fixtures/lanadelrey.jpg',
-        information:
-          'Lana Del Rey is an American singer-songwriter known for her cinematic music style, blending elements of pop, rock, and Americana.',
-        isPublished: true,
-      },
-      {
-        user: user,
-        name: 'Joji',
-        image: 'fixtures/joji.jpeg',
-        information:
-          'Joji is a Japanese-Australian singer known for his moody, introspective music, transitioning from his YouTube personality Filthy Frank.',
-        isPublished: true,
-      },
-      {
-        user: user,
-        name: 'Chetta',
-        image: 'fixtures/chetta.webp',
-        information: null,
-        isPublished: true,
-      },
-      {
-        user: user,
-        name: '$uicideBoy$',
-        image: 'fixtures/suicideboys.jpg',
-        information:
-          '$uicideBoy$ is an American hip-hop duo from New Orleans known for their dark, gritty lyrics and DIY approach to music production.',
-        isPublished: true,
-      },
-      {
-        user: user,
-        name: 'Playboi Carti',
-        image: 'fixtures/playboicarti.jpeg',
-        information:
-          'Playboi Carti is an American rapper known for his minimalist style and catchy, repetitive hooks, which have made him a prominent figure in the trap scene.',
-        isPublished: true,
-      },
-      {
-        user: user,
-        name: 'Pouya',
-        image: 'fixtures/pouya.jpg',
-        information: 'Pouya is an American rapper from Miami, known for his underground style, raw lyricism, and collaborations with other artists in the underground rap scene.',
-        isPublished: true,
-      },
-      {
-        user: user,
-        name: 'Test artist',
-        image: null,
-        information: null,
-        isPublished: false,
-      }
-    );
+  const [lilPeep, lanaDelRey, joji, chetta, suicideBoys, playboiCarti, pouya, testArtist] = await Artist.create(
+    {
+      user: user,
+      name: 'Lil Peep',
+      image: 'fixtures/lilpeep.jpg',
+      information:
+        'Lil Peep was an American rapper and singer known for blending emo and hip-hop in his music. He tragically passed away from a drug overdose in 2017 at the age of 21.',
+      isPublished: true,
+    },
+    {
+      user: user,
+      name: 'Lana Del Rey',
+      image: 'fixtures/lanadelrey.jpg',
+      information:
+        'Lana Del Rey is an American singer-songwriter known for her cinematic music style, blending elements of pop, rock, and Americana.',
+      isPublished: true,
+    },
+    {
+      user: user,
+      name: 'Joji',
+      image: 'fixtures/joji.jpeg',
+      information:
+        'Joji is a Japanese-Australian singer known for his moody, introspective music, transitioning from his YouTube personality Filthy Frank.',
+      isPublished: true,
+    },
+    {
+      user: user,
+      name: 'Chetta',
+      image: 'fixtures/chetta.webp',
+      information: null,
+      isPublished: true,
+    },
+    {
+      user: user,
+      name: '$uicideBoy$',
+      image: 'fixtures/suicideboys.jpg',
+      information:
+        '$uicideBoy$ is an American hip-hop duo from New Orleans known for their dark, gritty lyrics and DIY approach to music production.',
+      isPublished: true,
+    },
+    {
+      user: user,
+      name: 'Playboi Carti',
+      image: 'fixtures/playboicarti.jpeg',
+      information:
+        'Playboi Carti is an American rapper known for his minimalist style and catchy, repetitive hooks, which have made him a prominent figure in the trap scene.',
+      isPublished: true,
+    },
+    {
+      user: user,
+      name: 'Pouya',
+      image: 'fixtures/pouya.jpg',
+      information:
+        'Pouya is an American rapper from Miami, known for his underground style, raw lyricism, and collaborations with other artists in the underground rap scene.',
+      isPublished: true,
+    },
+    {
+      user: user,
+      name: 'Test artist',
+      image: null,
+      information: null,
+      isPublished: false,
+    },
+  );
 
   const [
     hellBoy,
@@ -219,7 +223,7 @@ const run = async () => {
       releaseYear: 2024,
       image: null,
       isPublished: false,
-    }
+    },
   );
 
   const [runway, hellboy] = await Track.create(
@@ -533,7 +537,7 @@ const run = async () => {
       track: hellboy,
       user: user,
       datetime: new Date(),
-    }
+    },
   );
 
   await db.close();

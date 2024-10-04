@@ -1,11 +1,4 @@
-import {
-  AppBar,
-  Container,
-  Grid2,
-  styled,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { AppBar, Box, styled, Toolbar, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
 import { selectUser } from '../../features/users/usersSlice';
@@ -24,25 +17,16 @@ const AppToolbar = () => {
   const user = useAppSelector(selectUser);
 
   return (
-    <AppBar
-      position="sticky"
-      sx={{ mb: 2, background: 'none', paddingTop: '15px' }}
-    >
-      <Toolbar>
-        <Grid2 container align-items="center">
-          <Grid2>
-            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-              <Container maxWidth="xl">
-                <StyledLink to="/">PlayCloud</StyledLink>
-              </Container>
-            </Typography>
-          </Grid2>
-          <Grid2 container>
-            {user ? <UserMenu user={user} /> : <AnonymousMenu />}
-          </Grid2>
-        </Grid2>
-      </Toolbar>
-    </AppBar>
+    <Box sx={{ flexGrow: 1, mt: 2, mb: 2 }}>
+      <AppBar position="sticky" sx={{ background: 'none' }}>
+        <Toolbar sx={{ margin: '0 24px' }}>
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
+            <StyledLink to="/">PlayCloud</StyledLink>
+          </Typography>
+          <Box>{user ? <UserMenu user={user} /> : <AnonymousMenu />}</Box>
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
 };
 

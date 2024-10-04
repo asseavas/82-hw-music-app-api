@@ -23,9 +23,7 @@ const TrackHistory = () => {
   if (isFetching) {
     content = <CircularProgress />;
   } else if (trackHistory.length > 0) {
-    content = trackHistory.map((trackHistory) => (
-      <TrackHistoryItem key={trackHistory._id} track={trackHistory} />
-    ));
+    content = trackHistory.map((trackHistory) => <TrackHistoryItem key={trackHistory._id} track={trackHistory} />);
   }
 
   useEffect(() => {
@@ -33,23 +31,20 @@ const TrackHistory = () => {
   }, [dispatch]);
 
   return (
-    <ContentContainer
-      container
-      direction="column"
-      spacing={1}
-      sx={{ paddingInline: '25px', mt: 4, pt: 4 }}
-    >
+    <ContentContainer container direction="column" spacing={1} sx={{ paddingInline: '25px', mt: 4, pt: 4 }}>
       <Grid2 mb={3}>
         <Typography variant="h4">Track history</Typography>
       </Grid2>
       <Grid2 container spacing={1} direction="column">
-        <AlbumTracksInfoContainer sx={{ borderBottom: 'none' }}>
-          <Typography sx={{ width: '350px' }}>Title</Typography>
-          <Typography>Artist</Typography>
-          <IconButton sx={{ ml: 'auto', width: 2 }} disabled>
-            <AccessTimeOutlinedIcon />
-          </IconButton>
-        </AlbumTracksInfoContainer>
+        {trackHistory.length > 0 && (
+          <AlbumTracksInfoContainer sx={{ borderBottom: 'none' }}>
+            <Typography sx={{ width: '350px' }}>Title</Typography>
+            <Typography>Artist</Typography>
+            <IconButton sx={{ ml: 'auto', width: 2 }} disabled>
+              <AccessTimeOutlinedIcon />
+            </IconButton>
+          </AlbumTracksInfoContainer>
+        )}
         <Grid2 container direction="column" justifyContent="space-between">
           {content}
         </Grid2>

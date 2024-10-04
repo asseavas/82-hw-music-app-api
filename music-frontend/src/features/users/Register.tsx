@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Avatar,
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Link,
-  Grid2,
-} from '@mui/material';
+import { Avatar, Box, Button, TextField, Typography, Link, Grid2 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -15,6 +7,7 @@ import { selectRegisterError, selectRegisterLoading } from './usersSlice';
 import { register } from './usersThunks';
 import { RegisterMutation } from '../../types';
 import { toast } from 'react-toastify';
+import FileInput from '../../UI/FileInput/FileInput';
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -23,7 +16,10 @@ const Register = () => {
   const navigate = useNavigate();
   const [state, setState] = useState<RegisterMutation>({
     username: '',
+    displayName: '',
+    avatar: null,
     password: '',
+    confirmPassword: '',
   });
 
   const getFieldError = (fieldName: string) => {
@@ -33,6 +29,16 @@ const Register = () => {
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setState((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const fileInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = event.target;
+    const value = files && files[0] ? files[0] : null;
+
+    setState((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const submitFormHandler = async (event: React.FormEvent) => {
@@ -48,7 +54,7 @@ const Register = () => {
   return (
     <Box
       sx={{
-        mt: 1,
+        mt: 5,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -60,12 +66,7 @@ const Register = () => {
       <Typography component="h1" variant="h5">
         Sign up
       </Typography>
-      <Box
-        component="form"
-        noValidate
-        onSubmit={submitFormHandler}
-        sx={{ mt: 3 }}
-      >
+      <Box component="form" noValidate onSubmit={submitFormHandler} sx={{ mt: 3 }}>
         <Grid2 container direction="column" spacing={2}>
           <Grid2>
             <TextField
@@ -82,6 +83,20 @@ const Register = () => {
           <Grid2>
             <TextField
               required
+              label="Your nickname"
+              name="displayName"
+              value={state.displayName}
+              onChange={inputChangeHandler}
+              error={Boolean(getFieldError('displayName'))}
+              helperText={getFieldError('displayName')}
+            />
+          </Grid2>
+          <Grid2>
+            <FileInput label="Avatar" name="avatar" onChange={fileInputChangeHandler} />
+          </Grid2>
+          <Grid2>
+            <TextField
+              required
               type="password"
               label="Password"
               name="password"
@@ -90,6 +105,19 @@ const Register = () => {
               onChange={inputChangeHandler}
               error={Boolean(getFieldError('password'))}
               helperText={getFieldError('password')}
+            />
+          </Grid2>
+          <Grid2>
+            <TextField
+              required
+              type="password"
+              label="Confirm password"
+              name="confirmPassword"
+              autoComplete="new-password"
+              value={state.confirmPassword}
+              onChange={inputChangeHandler}
+              error={Boolean(getFieldError('confirmPassword'))}
+              helperText={getFieldError('confirmPassword')}
             />
           </Grid2>
         </Grid2>

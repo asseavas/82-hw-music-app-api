@@ -1,16 +1,16 @@
-import { Button, Grid2 } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const AnonymousMenu = () => {
   return (
-    <Grid2>
-      <Button component={NavLink} to="/register" color="inherit">
+    <Box>
+      <Button component={NavLink} to="/register" color="inherit" sx={{ marginRight: '15px' }}>
         Sign up
       </Button>
       <Button component={NavLink} to="/login" color="inherit">
         Sign in
       </Button>
-    </Grid2>
+    </Box>
   );
 };
 

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { User } from '../../types';
-import { Button, Grid2, Menu, MenuItem } from '@mui/material';
-import { StyledButton, StyledLink } from '../../constants';
+import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip, Typography } from '@mui/material';
+import { API_URL } from '../../constants';
 import { useAppDispatch } from '../../app/hooks';
 import { logout } from '../../features/users/usersThunks';
+import avatarNotFound from '../../assets/images/no-avatar.jpg';
+import HistoryIcon from '@mui/icons-material/History';
+import { Link } from 'react-router-dom';
 
 interface Props {
   user: User;
@@ -26,28 +29,70 @@ const UserMenu: React.FC<Props> = ({ user }) => {
     dispatch(logout());
   };
 
-  return (
-    <Grid2 container spacing={4} width="100%">
-      <Grid2 component={StyledLink} to="/track_history">
-        {user.username}'s tracks history
-      </Grid2>
-      <Grid2 container spacing={4} alignItems="center">
-        <Grid2>
-          <Button onClick={handleClick} color="inherit">
-            Add new
-          </Button>
-          <Menu open={isOpen} anchorEl={anchorEl} onClose={handleClose} keepMounted>
-            <MenuItem component={StyledLink} to="/artists/new">Artist</MenuItem>
-            <MenuItem component={StyledLink} to="/albums/new">Album</MenuItem>
-            <MenuItem component={StyledLink} to="/tracks/new">Track</MenuItem>
-          </Menu>
-        </Grid2>
-        <Grid2 component={StyledButton} variant="outlined" color="white" onClick={handleLogout}>
-          Logout
-        </Grid2>
-      </Grid2>
-    </Grid2>
-  );
+  let avatar = avatarNotFound;
+
+  if (user.avatar) {
+    if (user.avatar.startsWith('https://lh3.googleusercontent')) {
+      avatar = user.avatar;
+    } else {
+      avatar = `${API_URL}/${user.avatar}`;
+    }
+  }
+
+  if (user)
+    return (
+      <Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+          <Tooltip title="Your track history">
+            <IconButton
+              component={Link}
+              to="/track_history"
+              sx={{
+                p: 0,
+                width: '45px',
+                height: '45px',
+              }}
+            >
+              <HistoryIcon sx={{ width: '30px', height: '30px' }} />
+            </IconButton>
+          </Tooltip>
+          <Typography>{user.displayName}</Typography>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleClick} sx={{ p: 0 }}>
+              <Avatar alt={user.username} src={avatar} sx={{ width: 45, height: 45 }} />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        <Menu
+          open={isOpen}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          keepMounted
+          sx={{ mt: '55px' }}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem component={Link} to="/artists/new">
+            New artist
+          </MenuItem>
+          <MenuItem component={Link} to="/albums/new">
+            New album
+          </MenuItem>
+          <MenuItem component={Link} to="/tracks/new">
+            New track
+          </MenuItem>
+          <MenuItem component={Button} onClick={handleLogout} sx={{ width: '100%', textTransform: 'none' }}>
+            Logout
+          </MenuItem>
+        </Menu>
+      </Box>
+    );
 };
 
 export default UserMenu;

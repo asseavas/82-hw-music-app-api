@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AlbumTrack, User } from '../../../types';
-import { Box, Grid2, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, Grid2, IconButton, Typography } from '@mui/material';
 import { TrackItem } from '../../../constants';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { LoadingButton } from '@mui/lab';
@@ -26,16 +26,39 @@ const AlbumTrackItem: React.FC<Props> = ({
   isPublication,
   onPublish,
 }) => {
+  const [hover, setHover] = useState(false);
+
+  const handleMouseEnter = () => {
+    setHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHover(false);
+  };
   return (
-    <TrackItem>
-      <Typography sx={{ width: '35px' }}>{track.number}</Typography>
-      {user && track.isPublished && (
-        <Tooltip title="Play">
-          <IconButton onClick={onClick} disabled={addToHistoryLoading}>
+    <TrackItem onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <Box style={{ position: 'relative', display: 'inline-block', width: '35px', height: '35px' }}>
+        {hover && user && track.isPublished ? (
+          <IconButton
+            onClick={onClick}
+            disabled={addToHistoryLoading}
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: -13,
+              width: '35px',
+              height: '35px',
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+          >
             <PlayArrowIcon />
           </IconButton>
-        </Tooltip>
-      )}
+        ) : (
+          <Typography sx={{ width: '35px', height: '35px', lineHeight: '35px' }}>{track.number}</Typography>
+        )}
+      </Box>
       <Typography>{track.title}</Typography>
       {!track.isPublished && user?.role !== 'admin' && (
         <Typography variant="body2" color="textSecondary" ml={5}>

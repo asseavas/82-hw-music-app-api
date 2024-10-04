@@ -1,6 +1,6 @@
 import AppToolbar from './UI/AppToolbar/AppToolbar';
 import { Container, Typography } from '@mui/material';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Artists from './features/artists/Artists';
 import OneArtist from './features/artists/OneArtist';
 import OneAlbum from './features/albums/OneAlbum';
@@ -16,12 +16,16 @@ import NewTrack from './features/tracks/NewTrack';
 
 const App = () => {
   const user = useAppSelector(selectUser);
+  const location = useLocation();
+  const hideToolbar = location.pathname === '/login' || location.pathname === '/register';
 
   return (
     <>
-      <header>
-        <AppToolbar />
-      </header>
+      {!hideToolbar && (
+        <header>
+          <AppToolbar />
+        </header>
+      )}
       <Container maxWidth="xl" component="main">
         <Routes>
           <Route path="/" element={<Artists />} />
@@ -61,10 +65,7 @@ const App = () => {
           />
           <Route path="/register" element={<Register />}></Route>
           <Route path="/login" element={<Login />}></Route>
-          <Route
-            path="*"
-            element={<Typography variant="h1">Not found</Typography>}
-          />
+          <Route path="*" element={<Typography variant="h1">Not found</Typography>} />
         </Routes>
       </Container>
     </>

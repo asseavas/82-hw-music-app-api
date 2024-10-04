@@ -1,49 +1,14 @@
-import { Box, Button, CardMedia, Grid2, styled } from '@mui/material';
+import { Box, CardMedia, Grid2, styled } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 export const API_URL = 'http://localhost:8000';
-
-// export const StyledLink = styled(Link)({
-//   color: 'inherit',
-//   textDecoration: 'none',
-//   height: '40px',
-//   padding: '6px 14px',
-//   borderRadius: '6px',
-//   transition: 'background-color 0.3s ease',
-//   '&:hover': {
-//     backgroundColor: '#0d569e',
-//   },
-// });
-
-export const StyledLink = styled(Link)({
-  color: 'inherit',
-  textDecoration: 'none',
-  padding: '6px 14px',
-  borderRadius: '6px',
-  backgroundColor: '#121212',
-  transition: 'background-color 0.3s ease',
-  '&:hover': {
-    backgroundColor: '#333',
-  },
-});
-
-export const StyledButton = styled(Button)({
-  color: 'inherit',
-  textTransform: 'none',
-  fontSize: '16px',
-  height: '40px',
-  padding: '6px 14px',
-  borderRadius: '6px',
-  transition: 'background-color 0.3s ease',
-  '&:hover': {
-    backgroundColor: '#0d569e',
-  },
-});
+export const GOOGLE_CLIENT_ID = '361227404492-15in7poel39gi3r5oe2g6ef4snkc3dvn.apps.googleusercontent.com';
 
 export const ContentContainer = styled(Grid2)({
   borderRadius: '10px',
   background: '#121212',
   paddingBottom: '32px',
+  marginBottom: '30px',
 });
 
 export const CardItem = styled(Box)({
@@ -68,8 +33,7 @@ export const AlbumImageContainer = styled(Grid2)({
   display: 'flex',
   borderTopLeftRadius: '10px',
   borderTopRightRadius: '10px',
-  background:
-    'linear-gradient(to bottom, rgba(80, 80, 80, 0.7), rgba(12, 12, 12, 0.1))',
+  background: 'linear-gradient(to bottom, rgba(80, 80, 80, 0.7), rgba(12, 12, 12, 0.1))',
 });
 
 export const OneAlbumCardMedia = styled(CardMedia)({
@@ -87,7 +51,7 @@ export const AlbumTracksInfoContainer = styled(Grid2)({
 });
 
 export const TrackItem = styled(Box)({
-  height: '32px',
+  height: '40px',
   display: 'flex',
   alignItems: 'center',
   paddingInline: '16px',

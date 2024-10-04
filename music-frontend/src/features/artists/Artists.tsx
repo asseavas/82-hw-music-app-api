@@ -1,11 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import {
-  selectArtistDeleting,
-  selectArtistPublication,
-  selectArtists,
-  selectArtistsFetching,
-} from './artistsSlice';
+import { selectArtistDeleting, selectArtistPublication, selectArtists, selectArtistsFetching } from './artistsSlice';
 import { deleteArtist, fetchArtists, publishArtist } from './artistsThunks';
 import { CircularProgress, Grid2, Typography } from '@mui/material';
 import ArtistCard from './components/ArtistCard';
@@ -57,11 +52,7 @@ const Artists = () => {
     content = <CircularProgress />;
   } else if (artists.length > 0) {
     const visibleArtists = artists.filter((artist) => {
-      return (
-        artist.isPublished ||
-        (user && artist.user === user._id) ||
-        (user && user.role === 'admin')
-      );
+      return artist.isPublished || (user && artist.user === user._id) || (user && user.role === 'admin');
     });
 
     if (visibleArtists.length > 0) {
@@ -83,12 +74,7 @@ const Artists = () => {
   }, [dispatch]);
 
   return (
-    <ContentContainer
-      container
-      direction="column"
-      spacing={3}
-      sx={{ paddingInline: '25px', mt: 4, pt: 4 }}
-    >
+    <ContentContainer container direction="column" spacing={3} sx={{ paddingInline: '25px', pt: 4 }}>
       <Grid2>
         <Typography variant="h4">Artists</Typography>
       </Grid2>

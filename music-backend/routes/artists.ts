@@ -30,28 +30,24 @@ artistsRouter.get('/:id', async (req, res, next) => {
   }
 });
 
-artistsRouter.post(
-  '/', auth,
-  imagesUpload.single('image'),
-  async (req: RequestWithUser, res, next) => {
-    try {
-      const artist = await Artist.create({
-        user: req.user?._id,
-        name: req.body.name,
-        image: req.file ? req.file.filename : null,
-        information: req.body.information || null,
-      });
+artistsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWithUser, res, next) => {
+  try {
+    const artist = await Artist.create({
+      user: req.user?._id,
+      name: req.body.name,
+      image: req.file ? req.file.filename : null,
+      information: req.body.information || null,
+    });
 
-      return res.send(artist);
-    } catch (error) {
-      if (error instanceof mongoose.Error.ValidationError) {
-        return res.status(400).send(error);
-      }
-
-      return next(error);
+    return res.send(artist);
+  } catch (error) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      return res.status(400).send(error);
     }
-  },
-);
+
+    return next(error);
+  }
+});
 
 artistsRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
   try {

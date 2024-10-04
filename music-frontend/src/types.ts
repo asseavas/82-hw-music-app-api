@@ -80,7 +80,10 @@ export interface HistoryTrack {
 
 export interface RegisterMutation {
   username: string;
+  displayName: string;
+  avatar: File | null;
   password: string;
+  confirmPassword: string;
 }
 
 export interface LoginMutation {
@@ -93,6 +96,8 @@ export interface User {
   username: string;
   token: string;
   role: string;
+  displayName: string;
+  avatar: string | null;
 }
 
 export interface ValidationError {

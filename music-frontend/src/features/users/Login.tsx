@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
-import {
-  Alert,
-  Avatar,
-  Box,
-  Button,
-  Grid2,
-  Link,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Alert, Avatar, Box, Button, Grid2, Link, TextField, Typography } from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { LoginMutation } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectLoginError, selectLoginLoading } from './usersSlice';
-import { login } from './usersThunks';
+import { googleLogin, login } from './usersThunks';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +24,13 @@ const Login = () => {
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  const googleLoginHandler = async (credentialResponse: CredentialResponse) => {
+    if (credentialResponse.credential) {
+      await dispatch(googleLogin(credentialResponse.credential)).unwrap();
+      navigate('/');
+    }
+  };
+
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
     await dispatch(login(state)).unwrap();
@@ -40,7 +40,7 @@ const Login = () => {
   return (
     <Box
       sx={{
-        mt: 1,
+        mt: '100px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -57,6 +57,14 @@ const Login = () => {
           {error.error}
         </Alert>
       )}
+      <Box sx={{ pt: 2 }}>
+        <GoogleLogin
+          onSuccess={googleLoginHandler}
+          onError={() => {
+            toast.error('Failed to login');
+          }}
+        />
+      </Box>
       <Box component="form" onSubmit={submitFormHandler} sx={{ mt: 3 }}>
         <Grid2 container direction="column" spacing={2}>
           <Grid2>
